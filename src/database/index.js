@@ -3,7 +3,7 @@ const UserFavorites = require('./models/favorites');
 const { sequelize } = require('./connection');
 
 const startDb = () => {
-  sequelize.sync({ alter: true });
+  sequelize.sync();
 };
 
 module.exports = {

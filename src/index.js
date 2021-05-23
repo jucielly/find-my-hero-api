@@ -3,15 +3,14 @@ const express = require('express');
 const cors = require('cors');
 const env = require('./config/env');
 const { startDb } = require('./database');
+const userRouter = require('./routes/user');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (request, response, next) => {
-  response.json({ teste: 'hellou' });
-});
+app.use('/users', userRouter);
 
 app.listen(env.port, () => {
   startDb();

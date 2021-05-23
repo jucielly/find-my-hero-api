@@ -5,7 +5,9 @@ const ServerError = require('../errors/serverError');
 const env = require('../config/env');
 
 class UserService {
-  static createUser({ name, email, password }) {
+  static createUser(user) {
+    if (typeof user !== 'object') throw new ClientError('Dados inválidos');
+    const { name, email, password } = user;
     const validEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email);
     if (!validEmail) throw new ClientError('Email inválido');
     if (!name) throw new ClientError('Nome não existe');
