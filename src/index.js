@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const env = require('./config/env');
+const { startDb } = require('./database');
 
 const app = express();
 
@@ -13,5 +14,6 @@ app.get('/', (request, response, next) => {
 });
 
 app.listen(env.port, () => {
+  startDb();
   console.log('server started!', env.port);
 });
