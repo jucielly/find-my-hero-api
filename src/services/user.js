@@ -62,6 +62,26 @@ class UserService {
       throw error;
     });
   }
+
+  static editUser({ user, userId, currentPassword }) {
+    if (!this.validateUser(user, false)) throw new ClientError('Dados inválidos');
+    const { name, email, password } = user;
+    const updatedUser = {};
+    if (name) updatedUser.name = name;
+    if (email) updatedUser.email = email;
+    if (password) updatedUser.passwordHash = bcrypt.hashSync(password, env.saltRounds);
+    User.findByPk(userId).then((foundUser) => {
+      if (!foundUser) throw new ClientError('Usuário não encontrado');
+      const passwordsMatch = bcrypt.compareSync(currentPassword.passwordHash);
+      if (!passwordsMatch) throw new AuthError('Senha incorreta');
+      return foundUser.update(updatedUser).then((result) => {
+        // eslint-disable-next-line no-shadow
+        const updatedUser = result.toJSON();
+        updatedUser.passwordHash = undefined;
+        return updatedUser;
+      });
+    });
+  }
 }
 
 module.exports = UserService;
