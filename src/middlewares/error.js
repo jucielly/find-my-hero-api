@@ -1,4 +1,5 @@
 const errorHandler = (error, request, response, next) => {
+  console.error(error);
   if (error.httpCode) {
     response.status(error.httpCode).json({
       message: error.message,

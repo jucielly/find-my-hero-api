@@ -1,5 +1,6 @@
 const express = require('express');
 const UserService = require('../services/user');
+const authorizationMiddleware = require('../middlewares/authorization');
 
 const userRouter = express.Router();
 
@@ -16,5 +17,20 @@ userRouter.post('/login', (request, response, next) => {
     response.json(authResponse);
   }).catch(next);
 });
+
+userRouter.patch('/current', [authorizationMiddleware, (request, response, next) => {
+  const { user, currentPassword } = request.body || {};
+  UserService.editUser({
+    user,
+    currentPassword,
+    userId: request.user.id,
+  }).then((editedUser) => response.json(editedUser))
+    .catch(next);
+}]);
+
+userRouter.get('/current', [authorizationMiddleware, (request, response, next) => {
+  UserService.getUser(request.user.id).then((user) => response.json(user))
+    .catch(next);
+}]);
 
 module.exports = userRouter;
