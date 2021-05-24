@@ -25,13 +25,14 @@ class UserService {
   }
 
   static login(email, password) {
+    if (!email || !password) throw new ClientError('Preencha email ou senha');
     return User.findOne({
       where: {
         email,
       },
     }).then((user) => {
       if (!user) throw new AuthError('Usuário ou senha incorretos');
-      const { passwordHash, ...userWithoutHash } = user;
+      const { passwordHash, ...userWithoutHash } = user.toJSON();
       const passwordsMatch = bcrypt.compareSync(password, passwordHash);
       if (!passwordsMatch) throw new AuthError('Usuário ou senha incorretos');
       const token = TokenService.sign(userWithoutHash);
