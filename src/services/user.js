@@ -80,6 +80,9 @@ class UserService {
         updatedUser.passwordHash = undefined;
         return updatedUser;
       });
+    }).catch((error) => {
+      if (!error.httpCode) throw new ServerError('Ocorreu um erro ao autorizar o usuário');
+      throw error;
     });
   }
 }
