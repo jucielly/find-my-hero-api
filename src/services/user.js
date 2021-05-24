@@ -3,6 +3,8 @@ const User = require('../database/models/user');
 const ClientError = require('../errors/clientError');
 const ServerError = require('../errors/serverError');
 const env = require('../config/env');
+const TokenService = require('./token');
+const AuthError = require('../errors/authError');
 
 class UserService {
   static createUser(user) {
@@ -19,6 +21,28 @@ class UserService {
       passwordHash,
     }).catch(() => {
       throw new ServerError('Erro ao criar conta');
+    });
+  }
+
+  static login(email, password) {
+    return User.findOne({
+      where: {
+        email,
+      },
+    }).then((user) => {
+      if (!user) throw new AuthError('Usuário ou senha incorretos');
+      const { passwordHash, ...userWithoutHash } = user;
+      const passwordsMatch = bcrypt.compareSync(password, passwordHash);
+      if (!passwordsMatch) throw new AuthError('Usuário ou senha incorretos');
+      const token = TokenService.sign(userWithoutHash);
+      return {
+        user: userWithoutHash,
+        token,
+
+      };
+    }).catch((error) => {
+      if (!error.httpCode) throw new ServerError('Erro ao obter credenciais');
+      throw error;
     });
   }
 }
