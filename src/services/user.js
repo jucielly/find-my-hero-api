@@ -70,9 +70,10 @@ class UserService {
     if (name) updatedUser.name = name;
     if (email) updatedUser.email = email;
     if (password) updatedUser.passwordHash = bcrypt.hashSync(password, env.saltRounds);
-    User.findByPk(userId).then((foundUser) => {
+    return User.findByPk(userId).then((foundUser) => {
+      console.log('foundUser', foundUser);
       if (!foundUser) throw new ClientError('Usuário não encontrado');
-      const passwordsMatch = bcrypt.compareSync(currentPassword.passwordHash);
+      const passwordsMatch = bcrypt.compareSync(currentPassword, foundUser.passwordHash);
       if (!passwordsMatch) throw new AuthError('Senha incorreta');
       return foundUser.update(updatedUser).then((result) => {
         // eslint-disable-next-line no-shadow
@@ -82,6 +83,18 @@ class UserService {
       });
     }).catch((error) => {
       if (!error.httpCode) throw new ServerError('Ocorreu um erro ao autorizar o usuário');
+      throw error;
+    });
+  }
+
+  static getUser(userId) {
+    return User.findByPk(userId).then((user) => {
+      if (!user) throw new ClientError('Usuário não encontrado');
+      const userWithoutHash = user.toJSON();
+      userWithoutHash.passwordHash = undefined;
+      return userWithoutHash;
+    }).catch((error) => {
+      if (!error.httpCode) throw new ServerError('Ocorreu um erro ao obter o usuário');
       throw error;
     });
   }
