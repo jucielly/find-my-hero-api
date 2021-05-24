@@ -7,13 +7,29 @@ const TokenService = require('./token');
 const AuthError = require('../errors/authError');
 
 class UserService {
-  static createUser(user) {
-    if (typeof user !== 'object') throw new ClientError('Dados inválidos');
+  static validateUser(user, validateAllFields = false) {
+    if (typeof user !== 'object') return false;
     const { name, email, password } = user;
-    const validEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email);
-    if (!validEmail) throw new ClientError('Email inválido');
-    if (!name) throw new ClientError('Nome não existe');
-    if (!password) throw new ClientError('Senha inválida');
+    if (name && name.trim().length < 4) {
+      return false;
+    }
+    if (email && !/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)) {
+      return false;
+    }
+
+    if (password && password.length < 7) {
+      return false;
+    }
+    const hasAllFields = !!(email && name && password);
+    if (validateAllFields && !hasAllFields) {
+      return false;
+    }
+    return true;
+  }
+
+  static createUser(user) {
+    if (!this.validateUser(user, true)) throw new ClientError('Dados inválidos');
+    const { name, email, password } = user;
     const passwordHash = bcrypt.hashSync(password, env.saltRounds);
     return User.create({
       name,
