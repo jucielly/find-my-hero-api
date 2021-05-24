@@ -8,5 +8,6 @@ module.exports = {
     database: process.env.DB_DATABASE,
   },
   saltRounds: +process.env.SALT_ROUNDS,
+  jwtSecret: process.env.JWT_SECRET,
 
 };
