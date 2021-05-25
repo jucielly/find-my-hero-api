@@ -10,14 +10,14 @@ class UserService {
   static validateUser(user, validateAllFields = false) {
     if (typeof user !== 'object') return false;
     const { name, email, password } = user;
-    if (name && name.trim().length < 4) {
+    if (name && name.trim().length < 2) {
       return false;
     }
     if (email && !/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)) {
       return false;
     }
 
-    if (password && password.length < 7) {
+    if (password && password.length < 8) {
       return false;
     }
     const hasAllFields = !!(email && name && password);
