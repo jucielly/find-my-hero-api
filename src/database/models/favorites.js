@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../connection');
 
-const UserFavorites = sequelize.define('UserFavorites', {
+const UserFavorites = sequelize.define('userFavorites', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -12,7 +12,11 @@ const UserFavorites = sequelize.define('UserFavorites', {
     allowNull: false,
   },
   type: {
-    type: DataTypes.ENUM('character', 'comic'),
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  resource: {
+    type: DataTypes.JSON,
     allowNull: false,
   },
 
