@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const { sequelize } = require('../connection');
 const UserFavorites = require('./favorites');
 
-const User = sequelize.define('User', {
+const User = sequelize.define('user', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -23,6 +23,6 @@ const User = sequelize.define('User', {
 
 });
 
-User.hasMany(UserFavorites, { as: 'favorites' });
+User.hasMany(UserFavorites);
 
 module.exports = User;
