@@ -9,5 +9,9 @@ module.exports = {
   },
   saltRounds: +process.env.SALT_ROUNDS,
   jwtSecret: process.env.JWT_SECRET,
+  marvel: {
+    publicKey: process.env.MARVEL_PUBLIC_KEY,
+    privateKey: process.env.MARVEL_PRIVATE_KEY,
+  },
 
 };

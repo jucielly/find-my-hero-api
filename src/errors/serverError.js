@@ -1,9 +1,9 @@
-class ClientError extends Error {
+class ServerError extends Error {
   constructor(message) {
     super(message);
-    this.httpCode = 400;
-    this.name = 'ClientError';
+    this.httpCode = 500;
+    this.name = 'ServerError';
   }
 }
 
-module.exports = ClientError;
+module.exports = ServerError;
