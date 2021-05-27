@@ -13,7 +13,7 @@ Api feita para o projeto [Find my hero](https://github.com/jucielly/find-my-hero
 3. **Configure seu .env file**:
 
 - `PORT=` Porta local onde vc vai rodar o projeto.
-- `DB_USER=` Nome do user do banco de dados que você vai usar(postgress).
+- `DB_USER=` Nome do user do banco de dados(postgress).
 - `DB_PASSWORD=` Senha do seu banco de dados.
 - `DB_HOST=` Ip do seu banco de dados, caso seja local use o `localhost`
 - `DB_PORT=` Numero da porta do banco de dados.
